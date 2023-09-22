@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
-import { MotionType, LinkProps, RouterType } from '../types'
+import type { MotionType, LinkProps, RouterType } from '../types'
 import { Network } from './network'
 import { Viewport } from './viewport'
 
@@ -53,7 +53,7 @@ export const NavigateMotion = ({
     } else if (typeof routing === 'function') {
       routing(href)
     }
-  }, [])
+  }, [href, routing])
 
   const isPathname =
     typeof window !== 'undefined' &&
@@ -114,7 +114,7 @@ export const NavigateMotion = ({
       requestAnimationFrame(lastMotion)
     }, (exitTime as number) * 1000)
     return () => clearTimeout(timerId)
-  }, [pathname, entry, exit, href, isMotion, routing, scroll])
+  }, [pathname, entry, exit, href, isMotion, routing, scroll, runTransition])
 
   useEffect(() => {
     if (isOnline && isVisible && prefetch) runPrefetch()
