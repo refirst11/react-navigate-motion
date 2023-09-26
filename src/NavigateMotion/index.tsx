@@ -6,6 +6,7 @@ import { Viewport } from './viewport'
 export const NavigateMotion = ({
   href,
   routing,
+  className,
   children,
   exit,
   entry,
@@ -103,17 +104,25 @@ export const NavigateMotion = ({
     } as MotionType
 
     motion(exit, exitTime, exitEase)
-    const lastMotion = () => {
-      motion(init, entryTime, entryEase)
-      scroll && window.scrollTo(0, 0)
-      runTransition()
-      setIsMotion(false)
-    }
     const timerId = setTimeout(() => {
+      // pass the entry style.
       motionInitialize(entry)
+      const lastMotion = () => {
+        entry && motion(init, entryTime, entryEase) // if entry defined.
+        scroll && window.scrollTo(0, 0)
+        runTransition()
+        setIsMotion(false)
+      }
       requestAnimationFrame(lastMotion)
     }, (exitTime as number) * 1000)
-    return () => clearTimeout(timerId)
+
+    const hasNotEntry = () => {
+      motionInitialize(init)
+    }
+    return () => {
+      clearTimeout(timerId)
+      !entry && requestAnimationFrame(hasNotEntry) // if entry undefined.
+    }
   }, [pathname, entry, exit, href, isMotion, routing, scroll, runTransition])
 
   useEffect(() => {
@@ -131,6 +140,7 @@ export const NavigateMotion = ({
     <a
       ref={aRef}
       href={href}
+      className={className}
       onPointerDown={() => !prefetch && runPrefetch()}
       onClick={e => handleTransition(e)}
     >
