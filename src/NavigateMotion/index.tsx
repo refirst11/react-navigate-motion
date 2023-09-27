@@ -63,7 +63,6 @@ export const NavigateMotion = ({
   const [pathname, setPathname] = useState(initialPathname)
   useLayoutEffect(() => {
     setPathname(window.location.pathname)
-    if (isOnline && isVisible && pathname && prefetch) runPrefetch()
     if (!isMotion) return
     const dom = document.body as HTMLBodyElement
     const exitEase = easeString(exit)
@@ -124,18 +123,11 @@ export const NavigateMotion = ({
       clearTimeout(timerId)
       if (!entry) requestAnimationFrame(hasNotEntry) // if entry undefined.
     }
-  }, [
-    entry,
-    exit,
-    isMotion,
-    isOnline,
-    isVisible,
-    pathname,
-    prefetch,
-    runPrefetch,
-    runTransition,
-    scroll
-  ])
+  }, [entry, exit, isMotion, runTransition, scroll])
+
+  useEffect(() => {
+    if (isOnline && isVisible && prefetch) runPrefetch()
+  }, [isOnline, isVisible, prefetch, runPrefetch])
 
   const handleTransition = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
