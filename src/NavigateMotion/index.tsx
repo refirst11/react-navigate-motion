@@ -105,18 +105,25 @@ export const NavigateMotion = ({
 
     motion(exit, exitTime, exitEase)
     const timerId = setTimeout(() => {
-      if (entry) motionInitialize(entry) // pass the entry style.
-      runTransition()
-      if (entry) motion(init, entryTime, entryEase) // if entry defined.
-      if (!entry) motion(init, 0, '') // if entry undefined.
-      if (scroll) window.scrollTo(0, 0)
-      setIsMotion(false)
+      // pass the entry style.
+      motionInitialize(entry)
+      const lastMotion = () => {
+        if (entry) motion(init, entryTime, entryEase) // if entry defined.
+        if (scroll) window.scrollTo(0, 0)
+        runTransition()
+        setIsMotion(false)
+      }
+      requestAnimationFrame(lastMotion)
     }, (exitTime as number) * 1000)
 
+    const hasNotEntry = () => {
+      motionInitialize(init)
+    }
     return () => {
       clearTimeout(timerId)
+      if (!entry) requestAnimationFrame(hasNotEntry) // if entry undefined.
     }
-  }, [entry, exit, isMotion, runTransition, scroll])
+  }, [pathname, entry, exit, isMotion, runTransition, scroll])
 
   useEffect(() => {
     if (isOnline && isVisible && prefetch && pathname) runPrefetch()
