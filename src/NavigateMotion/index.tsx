@@ -123,11 +123,11 @@ export const NavigateMotion = ({
       clearTimeout(timerId)
       if (!entry) requestAnimationFrame(hasNotEntry) // if entry undefined.
     }
-  }, [entry, exit, isMotion, runTransition, scroll])
+  }, [pathname, entry, exit, isMotion, runTransition, scroll])
 
   useEffect(() => {
-    if (isOnline && isVisible && prefetch) runPrefetch()
-  }, [isOnline, isVisible, prefetch, runPrefetch])
+    if (isOnline && isVisible && pathname && prefetch) runPrefetch()
+  }, [isOnline, isVisible, pathname, prefetch, runPrefetch])
 
   const handleTransition = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
