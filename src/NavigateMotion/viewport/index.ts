@@ -4,7 +4,20 @@ export function Viewport() {
   const [isVisible, setIsVisible] = useState(false)
   const aRef = useRef<HTMLAnchorElement>(null)
   useEffect(() => {
+    const isElementInViewport = (element: HTMLElement | null): boolean => {
+      if (!element) return false
+      const rect = element.getBoundingClientRect()
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= window.innerHeight &&
+        rect.right <= window.innerWidth
+      )
+    }
     const anchor = aRef.current as HTMLAnchorElement
+    const initialVisibility = isElementInViewport(anchor)
+    setIsVisible(initialVisibility)
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting)
@@ -24,5 +37,6 @@ export function Viewport() {
       }
     }
   }, [])
+
   return { aRef, isVisible }
 }
