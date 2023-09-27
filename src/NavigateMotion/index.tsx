@@ -105,29 +105,22 @@ export const NavigateMotion = ({
 
     motion(exit, exitTime, exitEase)
     const timerId = setTimeout(() => {
-      // pass the entry style.
-      motionInitialize(entry)
-      const lastMotion = () => {
-        entry && motion(init, entryTime, entryEase) // if entry defined.
-        scroll && window.scrollTo(0, 0)
-        runTransition()
-        setIsMotion(false)
-      }
-      requestAnimationFrame(lastMotion)
+      if (entry) motionInitialize(entry) // pass the entry style.
+      runTransition()
+      if (entry) motion(init, entryTime, entryEase) // if entry defined.
+      if (!entry) motion(init, 0, '') // if entry undefined.
+      if (scroll) window.scrollTo(0, 0)
+      setIsMotion(false)
     }, (exitTime as number) * 1000)
 
-    const hasNotEntry = () => {
-      motionInitialize(init)
-    }
     return () => {
       clearTimeout(timerId)
-      !entry && requestAnimationFrame(hasNotEntry) // if entry undefined.
     }
-  }, [pathname, entry, exit, href, isMotion, routing, scroll, runTransition])
+  }, [entry, exit, isMotion, runTransition, scroll])
 
   useEffect(() => {
-    if (isOnline && isVisible && prefetch) runPrefetch()
-  }, [href, isOnline, isVisible, prefetch, routing, runPrefetch])
+    if (isOnline && isVisible && prefetch && pathname) runPrefetch()
+  }, [isOnline, isVisible, prefetch, pathname, runPrefetch])
 
   const handleTransition = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
