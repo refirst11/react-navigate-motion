@@ -6,7 +6,8 @@
 
 ## Overview
 
-A programmatic page transition with animation.  
+A programmatic page transition with animation.
+
 This library uses react-router-dom's navigate hook and other frameworks routing functions.  
 The single component performs the unmount and next page initial mount animations, motion is always returns to the initial style.
 
