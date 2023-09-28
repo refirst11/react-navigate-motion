@@ -37,6 +37,7 @@ export interface RouterType {
     | {
         push: (href: string) => void
         prefetch: (href: string) => void
+        refresh: () => void
       }
     | ((href: string) => void)
 }
