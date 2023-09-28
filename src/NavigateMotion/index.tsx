@@ -123,7 +123,7 @@ export const NavigateMotion = ({
 
     return () => {
       clearTimeout(timerId)
-      if (!entry) setTimeout(() => motionInitialize(init), 20) // if entry undefined.
+      if (!entry) setTimeout(() => motionInitialize(init), 50) // if entry undefined.
       cancelAnimationFrame(animateId)
     }
   }, [
