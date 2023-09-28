@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import type { MotionType, LinkProps, RouterType } from '../types'
 import { Network } from './network'
 import { Viewport } from './viewport'
@@ -110,7 +110,6 @@ export const NavigateMotion = ({
 
     let animateId: number
     motion(exit, exitTime, exitEase)
-    if (!entry) motion(init, 0, '') // if entry undefined.
     const timerId = setTimeout(() => {
       motionInitialize(entry)
       const lastMotion = () => {
@@ -124,6 +123,7 @@ export const NavigateMotion = ({
 
     return () => {
       clearTimeout(timerId)
+      if (!entry) setTimeout(() => motionInitialize(init), 10) // if entry undefined.
       cancelAnimationFrame(animateId)
     }
   }, [
