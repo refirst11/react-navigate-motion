@@ -56,13 +56,18 @@ export const NavigateMotion = ({
     }
   }, [href, routing])
 
+  useEffect(() => {
+    if ('refresh' in routing) routing.refresh()
+  }, [routing])
+
   const isPathname =
     typeof window !== 'undefined' &&
     typeof window.location.pathname === 'string'
   const initialPathname = (isPathname && window.location.pathname) as string
   const [pathname, setPathname] = useState(initialPathname)
-  useLayoutEffect(() => {
+  useEffect(() => {
     setPathname(window.location.pathname)
+    if (isOnline && isVisible && pathname && prefetch) runPrefetch()
     if (!isMotion) return
     const dom = document.body as HTMLBodyElement
     const exitEase = easeString(exit)
@@ -103,9 +108,10 @@ export const NavigateMotion = ({
       rotate3d: [0, 0, 1, '0deg']
     } as MotionType
 
+    let animateId: number
     motion(exit, exitTime, exitEase)
+    if (!entry) motion(init, 0, '') // if entry undefined.
     const timerId = setTimeout(() => {
-      // pass the entry style.
       motionInitialize(entry)
       const lastMotion = () => {
         if (entry) motion(init, entryTime, entryEase) // if entry defined.
@@ -113,21 +119,25 @@ export const NavigateMotion = ({
         runTransition()
         setIsMotion(false)
       }
-      requestAnimationFrame(lastMotion)
+      animateId = requestAnimationFrame(lastMotion)
     }, (exitTime as number) * 1000)
 
-    const hasNotEntry = () => {
-      motionInitialize(init)
-    }
     return () => {
       clearTimeout(timerId)
-      if (!entry) requestAnimationFrame(hasNotEntry) // if entry undefined.
+      cancelAnimationFrame(animateId)
     }
-  }, [pathname, entry, exit, isMotion, runTransition, scroll])
-
-  useEffect(() => {
-    if (isOnline && isVisible && pathname && prefetch) runPrefetch()
-  }, [isOnline, isVisible, pathname, prefetch, runPrefetch])
+  }, [
+    entry,
+    exit,
+    isMotion,
+    isOnline,
+    isVisible,
+    pathname,
+    prefetch,
+    runPrefetch,
+    runTransition,
+    scroll
+  ])
 
   const handleTransition = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
