@@ -2,16 +2,6 @@
   "name": "react-navigate-motion",
   "version": "0.2.2",
   "description": "React Component library for page transition with animation",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/su-pull/react-navigate-motion",
-    "directory": "react-navigate-motion/src"
-  },
-  "scripts": {
-    "tsc": "./node_modules/.bin/tsc"
-  },
   "keywords": [
     "react",
     "page",
@@ -19,7 +9,20 @@
     "animation",
     "motion"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/su-pull/react-navigate-motion",
+    "directory": "react-navigate-motion/src"
+  },
   "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "tsc": "./node_modules/.bin/tsc"
+  },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
